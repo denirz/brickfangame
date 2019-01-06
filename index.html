@@ -17,16 +17,7 @@
 
 
   <script>
-    let nlines = 60;
-    // var gamefield  = new Array(nlines);
-    // var x = new Array(10);
-
-        // for (var i = 0; i < gamefield.length;  i++) {
-        //   gamefield[i] = new Array(nlines);
-        //   for (var j = 0; j<gamefield[i].length;j++){
-        //       gamefield[i,j]=0;
-        //   }
-        //   }
+    let nlines = 100;
 
     class Qlist{
             constructor(){
@@ -69,11 +60,9 @@
 
           }
     }
-    var listitems = new Qlist()
+
 
     class Quadrant{
-        // var x , y;
-        // var n,m;
         constructor(x,y){
             this.x=x;
             this.y=y;
@@ -92,7 +81,7 @@
         }
         fix(canvas){
             var res = listitems.addQuadrant(this);
-            console.log(res)
+            console.log(res);
             if (res ===1){
               this.reload(canvas)
                 }
@@ -196,7 +185,9 @@
 
 
     }
-    var a  = new Quadrant(1,1);
+    let a  = new Quadrant(1,1);
+    let listitems = new Qlist();
+    let listmashineitems = new Qlist();
 
     function draw() {
          if (a){
@@ -211,10 +202,6 @@
         // canvas.addEventListener("mousedown", function(){Element(canvas)}, false);
         window.addEventListener("keyup", function (event) {
             console.log(event)
-            // if(event.key == 'r'){
-            //     a.reload(canvas)
-            //     a.output();
-            // }
             if(event.key == ' '){
                 a.rotate(canvas)
                 a.output();
@@ -250,19 +237,18 @@
         // console.log('m here 1');
     }
 
-
     function drawgrid(canvas){
-       var ctx = canvas.getContext("2d");
+       let ctx = canvas.getContext("2d");
         var step = canvas.width/nlines;
         ctx.lineWidth = 1;
         ctx.beginPath();
-        for ( var  i=0;i<nlines;i++ ){
+        for ( let  i=0;i<nlines;i++ ){
             ctx.moveTo(step*i,0);
           ctx.lineTo(step*i,canvas.height);
         }
 
         var step = canvas.height/nlines;
-        for ( var  i=0;i<nlines;i++ ){
+        for ( let  i=0; i< nlines ;i++ ){
             ctx.moveTo(0, step*i,0);
           ctx.lineTo(canvas.width,step*i);
         }
@@ -278,88 +264,8 @@
       return [q_w,q_h]
     }
 
-    // function ableToLocate(x,y,n,m) {
-    //         console.log(x,y,n,m);
-    //         for (var i=x;i<x+n;i++){
-    //           for (var j=y;j<y+m;j++){
-    //               console.log("status",i,j,gamefield[i,j]);
-    //               if (gamefield[i,j] != 0)
-    //               {
-    //                   return false;
-    //               }
-    //           }
-    //         }
-    //     return true
-    // }
 
-    // function fixInArray(x,y,n,m) {
-    //         for (var i=x;i<x+n;i++){
-    //           for (var j=y;j<y+m;j++){
-    //               console.log("status",i,j,gamefield[i,j]);
-    //               gamefield[i,j] = 1
-    //           }
-    //         }
-    //
-    // }
-    // function Element(canvas) {
-    //     var x= parseInt(Math.random()*6)+1;
-    //     var y= parseInt(Math.random()*6)+1;
-    //     console.log("Random",x,y);
-    //
-    //     var s = getCellsize();
-    //     console.log(s[0]);
-    //     console.log(s[1]);
-    //     square=[x*s[0],y*s[1]];
-    //     let ctx = canvas.getContext("2d");
-    //     ctx.fillStyle="FF0000";
-    //     ctx.fillRect(0,0,square[0],square[1]);
-    //     // draw();
-    //
-    //     if (ableToLocate(0,0,x,y)){
-    //         fixInArray(0,0,x,y);
-    //         console.log("fixed");
-    //         ctx.fillStyle="000000";
-    //         ctx.fillRect(0,0,square[0],square[1]);
-    //     }
-    //     else {
-    //         console.log("Impossible to fix ")
-    //         return false
-    //     }
-    //
-    //     // var s = getCellsize();
-    //     // console.log(s[0]);
-    //     // console.log(s[1]);
-    //     // square=[x*s[0],y*s[1]];
-    //     // let ctx = canvas.getContext("2d");
-    //     // ctx.fillStyle="FF0000";
-    //     // ctx.fillRect(0,0,square[0],square[1]);
-    //     // ctx.fillStyle="FFFFFF";
-    //
-    //     // console.log(gamefield[x,y])
-    //
-    // }
 
-  // function click1() {
-  //     console.log(event);
-  //     // console.log(event.layerX);
-  //     // console.log(event.layerY);
-  //     // var nlines=18; // todo научиться передавать в аргументе
-  //     // console.log(nlines);
-  //     // console.log(el);
-  //     // console.log(event.layerX);
-  //     var canvas = document.getElementById("main"); // todo  научиться передавать в  аргументе тоже
-  //     // var el = event.srcElement;
-  //     var q_w = parseFloat(canvas.width/nlines);
-  //     var q_h = parseFloat(canvas.height/nlines);
-  //     var q_x = parseInt(event.layerX/q_w,10);
-  //     var q_y = parseInt(event.layerY/q_h,10);
-  //     console.log("I'm here");
-  //     console.log(q_x,q_y);
-  //
-  //     var ctx = canvas.getContext("2d");
-  //     ctx.fillRect(q_x*q_w,q_y*q_h,q_w,q_h);
-  //
-  // }
 
   </script>
 
@@ -375,7 +281,7 @@
   <![endif]-->
 
   <p>Hello world! This is HTML5 Boilerplate.</p>
-  <canvas  id="main" width="800" height="600" > </canvas>
+  <canvas  id="main" width="800" height="800" > </canvas>
 
 
 
