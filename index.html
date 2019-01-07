@@ -26,7 +26,7 @@
   </script>
 
   <script>
-    let nlines = 40;
+    let nlines = 20;
 
     class Qlist{
             constructor(){
@@ -136,12 +136,22 @@
             console.log(this.x,this.n)
             console.log(this.y,this.m)
         }
-        fix(canvas,listitems){
-            var res = listitems.addQuadrant(this);
+        fix(canvas,listitems,listother=listmashineitems){
+
+            let foreinres = this.checkcorrectness(listother);
+            console.log("Foreine status ",foreinres);
+            if (foreinres==='Cross') {
+                return 0
+            }
+            let res = listitems.addQuadrant(this);
             // console.log(res);
             if (res ===1){
               this.reload(canvas)
+                return 1 // успешно вставили
                 }
+            else{
+                return 0
+            }
         }
         reload(canvas){
             this.clear(canvas)
@@ -245,8 +255,8 @@
             ctx.fillRect(this.x*s[0],this.y*s[1],this.n*s[0],this.m*s[1]);
         }
         movedown(canvas){
-            var ctx = canvas.getContext("2d");
-            var s = getCellsize();
+            let ctx = canvas.getContext("2d");
+            let  s = getCellsize();
             ctx.clearRect(this.x*s[0],this.y*s[1],this.n*s[0],this.m*s[1]);
             ctx.fillStyle="rgba(255,0 , 0, 0.5)";
             this.y=this.y+1;
@@ -266,7 +276,8 @@
             return p
         }
         checkcorrectness(set){
-            ///not ready yet !
+            ///returns either number of neoghboors either "cross"
+            /// if number of neihgbors = 0  so it is not allowed to put  as well
             if (! set instanceof Qlist){return 'Error'}
             let sumres = 0;
             for (var item of set.items){
@@ -300,13 +311,6 @@
               }
             return 0
             }
-        steprand(canvas,candidat){
-            this.clear(canvas);
-            this.x=candidat[0];
-            this.y=candidat[1];
-            this.draw(canvas)
-            drawgrid(canvas)
-        }
 
 
     }
@@ -317,7 +321,6 @@
     var b = new Quadrant(nlines-8,nlines-8)
 
     function mashinegame(canvas){
-        // b.perimeter_draw(canvas)
         console.log("LENTH",listmashineitems.items.length)
         if (listmashineitems.items.length ===0){
           var allowed_u = listitems.addQuadrant(b,fix=0);
@@ -326,20 +329,12 @@
           b.reload(canvas);
             return 0;
         }
-        // console.log("Quad1:",b,"correctness:",b.checkcorrectness(listmashineitems));
-        // if (b.checkcorrectness(listmashineitems) == 'Cross' ){
-        //     b.setcoords(canvas,1,1);
-        //     console.log("SET")
-        // }
-        // if (b.checkcorrectness(listmashineitems) == 0 ){
-        //     b.setcoords(canvas,1,5);
-        //     console.log("SET")
-        // }
         for(i=0;i<nlines;i++){
             for(j=0;j<nlines;j++){
                 b.setcoords(canvas,j,i); //todo может быть добавить немнго ума в  такой перебор
                 // console.log("Quad1:",b,"correctness:",b.checkcorrectness(listmashineitems));
-                if((b.checkcorrectness(listmashineitems) > 0)&& (b.checkcorrectness(listitems) ==0))
+                if((b.checkcorrectness(listmashineitems) > 0)&& ((b.checkcorrectness(listitems) ==0)
+                || (b.checkcorrectness(listitems) > 0)) )
                 {
                     console.log("Found",b);
                     listmashineitems.addQuadrant(b);
@@ -351,68 +346,36 @@
 
         console.log("NO moves!");
         b.reload(canvas)
-
-
-        //
-        // // console.log("in other",allowed_u);
-        // // var allowed_m = listmashineitems.addQuadrant(b);
-        // // console.log("in my",allowed_m);
-        // console.log("B",b)
-        // // while (allowed_u === 0  || allowed_m == 0){
-        // let candidad = listmashineitems.proposeNewPlace(b.n,b.m);
-        // console.log("Candidat",candidad)
-        // b.steprand(canvas,candidad);
-        // console.log("B After step",b)
-        // // allowed_u = listitems.addQuadrant(b,fix=0);
-        // console.log("Quad:",b,"correctness:",b.checkcorrectness(listmashineitems));
-        // // console.log(b.checkcorrectness(listmashineitems))
-        // allowed_m = listmashineitems.addQuadrant(b);
-        // console.log("results:",allowed_u,allowed_m);
-        //
-        // if (allowed_m ===1){
-        //     console.log("Reloading! ")
-        //     b.reload(canvas)
-        // }
-        // b.output();
     }
 
     function draw() {
-         if (a){
-            // console.log("a=",a)
-             }
-             else {
-             a = new Quadrant(1, 1);
-         }
         var canvas = document.getElementById("main");
-        drawgrid(canvas)
-        // canvas.addEventListener("mousedown", click1, false);
-        // canvas.addEventListener("mousedown", function(){Element(canvas)}, false);
+        drawgrid(canvas);
         window.addEventListener("keyup", function (event) {
-            console.log(event)
-            if(event.key == ' '){
-                a.rotate(canvas)
+            if(event.key === ' '){
+                a.rotate(canvas);
                 a.output();
             }
-            if ( event.key =="ArrowRight"){
-                console.log(a);
+            if ( event.key ==="ArrowRight"){
+                // console.log(a);
                 a.moveright(canvas)
             }
             if ( event.key =="ArrowLeft"){
-                console.log(a);
+                // console.log(a);
                 a.moveleft(canvas)
             }
             if ( event.key =="ArrowUp"){
-                console.log(a);
+                // console.log(a);
                 a.moveup(canvas)
             }
             if ( event.key =="ArrowDown"){
-                console.log(a);
+                // console.log(a);
                 a.movedown(canvas)
             }
             if ( event.key =="f"){
                 console.log(a);
-                a.fix(canvas,listitems);
-                mashinegame(canvas);
+                let r = a.fix(canvas,listitems);
+                if(r ===1) { mashinegame(canvas);}
                 // console.log(listitems)
             }
             if ( event.key =="m"){
@@ -462,7 +425,7 @@
             ctx.save();
             ctx.fillStyle="rgba(255,255,255,1)";
             let s = getCellsize();
-            ctx.fillRect(x*s[0],y*s[1],s[0],s[1]);
+            ctx.clearRect(x*s[0],y*s[1],s[0],s[1]);
             ctx.restore();
 
     }
@@ -491,7 +454,7 @@
   <![endif]-->
 
   <p>Hello world! This is HTML5 Boilerplate.</p>
-  <canvas  id="main" width="400" height="400" > </canvas>
+  <canvas  id="main" width="800" height="800" > </canvas>
 
 
 
