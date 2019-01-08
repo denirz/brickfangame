@@ -74,35 +74,6 @@
           }
 
 
-          // proposeNewPlace(n,m){
-          //     var fullp  =  new Array()
-          //     console.log("Number of items i narray",this.items.length);
-              // for (var item of this.items){
-              //     fullp = fullp.concat(item.perimeter())
-              // }
-              // console.log(fullp)
-              // for (var p of fullp){
-              //     console.log(p)
-              //     drawpixel(p[0],p[1])
-              //     sleep(1000);////
-              //     clearpixel(p[0],p[1])
-                  // drawpixel(p[0],p[1]);
-                  // let candidat =[p[0]-n+1,p[1]-m+1]
-                  // let tq = new Quadrant(candidat[0],candidat[1],n,m)
-
-                  // let result = this.addQuadrant(tq,fix=0);
-                  // if (result === 1){
-                  //     tq.testdraw();
-                  // console.log("Quadrantresul",result,candidat);
-                  // drawpixel(candidat[0],candidat[1]);
-                  // sleep(1000);
-                  // clearpixel(candidat[0],candidat[1]);
-                  //     return  candidat
-                  //
-                  // }
-
-                  // }
-          // }
     }
     class Quadrant{
         constructor(x,y){
