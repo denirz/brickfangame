@@ -66,8 +66,8 @@
                 if (index !==-1){
                     this.items.splice(index,1);
                     //после удаления надо удалить его и на картинке
-                    candidate.clear(canvas);
-                    drawgrid(canvas);
+                    // candidate.clear(canvas);
+                    // drawgrid(canvas);
                     return 1 ///  Success!
                 }
                 return -1
@@ -141,10 +141,15 @@
             if (foreinres==='Cross') {
                 return 0
             }
+
             let res = listitems.addQuadrant(this);
             // console.log(res);
             if (res ===1){
-              this.reload(canvas)
+                if (foreinres instanceof Array && foreinres[0]==='Cross'){
+                console.log("Removing item "+foreinres);
+                listother.removeItem(this);
+                }
+                this.reload(canvas);
                 return 1 // успешно вставили
                 }
             else{
