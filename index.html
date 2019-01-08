@@ -18,15 +18,15 @@
   <script src="js/utils.js"></script>
   <script>
     // Paramaters
-    let nlines = 20;
+    let nlines = 30;
   </script>
   <script src="js/Quadrant.js"></script>
   <script>
     let a  = new Quadrant(1,1);
     let listitems = new Qlist();
     let listmashineitems = new Qlist();
-    listmashineitems.color = "rgba(0,255 ,0, 1)"
-    var b = new Quadrant(nlines-8,nlines-8)
+    listmashineitems.color = "rgba(0,255 ,0, 1)";
+    let b = new Quadrant(nlines-8,nlines-8);
 
     function mashinegame(canvas){
         console.log("LENTH",listmashineitems.items.length)
@@ -57,7 +57,7 @@
     }
 
     function draw() {
-        var canvas = document.getElementById("main");
+        let canvas = document.getElementById("main");
         drawgrid(canvas);
         window.addEventListener("keyup", function (event) {
             if(event.key === ' '){
@@ -92,36 +92,7 @@
                 mashinegame(canvas)
             }
         }, false);
-
-
-        // console.log('m here 1');
     }
-
-    function drawgrid(canvas){
-       let ctx = canvas.getContext("2d");
-        var step = canvas.width/nlines;
-        ctx.lineWidth = 1;
-        ctx.beginPath();
-        for ( let  i=0;i<nlines;i++ ){
-            ctx.moveTo(step*i,0);
-          ctx.lineTo(step*i,canvas.height);
-        }
-
-        var step = canvas.height/nlines;
-        for ( let  i=0; i< nlines ;i++ ){
-            ctx.moveTo(0, step*i,0);
-          ctx.lineTo(canvas.width,step*i);
-        }
-        ctx.stroke();
-        listitems.drawQlist(canvas);
-        listmashineitems.drawQlist(canvas);
-    }
-
-
-
-
-
-
   </script>
 
 

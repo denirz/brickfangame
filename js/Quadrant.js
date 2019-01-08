@@ -47,35 +47,62 @@
               })
 
           }
-          proposeNewPlace(n,m){
-              var fullp  =  new Array()
-              // console.log("Number of items i narray",this.items.length);
-              for (var item of this.items){
-                  fullp = fullp.concat(item.perimeter())
-              }
-              console.log(fullp)
-              for (var p of fullp){
-                  console.log(p)
-                  drawpixel(p[0],p[1])
-                  sleep(1000);////
-                  clearpixel(p[0],p[1])
-                  // drawpixel(p[0],p[1]);
-                  let candidat =[p[0]-n+1,p[1]-m+1]
-                  let tq = new Quadrant(candidat[0],candidat[1],n,m)
 
-                  let result = this.addQuadrant(tq,fix=0);
-                  if (result === 1){
-                      tq.testdraw();
-                  console.log("Quadrantresul",result,candidat);
-                  drawpixel(candidat[0],candidat[1]);
-                  sleep(1000);
-                  clearpixel(candidat[0],candidat[1]);
-                      return  candidat
-
-                  }
-
-                  }
+          checkToRemove(candidate){
+                ///  должеен возвращать индекс элемента который  можно удалить
+                if(!(candidate instanceof Quadrant)){ return "Error" }
+                for(var index in  this.items){
+                    let i =this.items[index];
+                    if( (candidate.n===i.n) && (candidate.m===i.m) && (candidate.x===i.x) && (candidate.y===i.y)) {
+                        return index
+                    }
+                }
+                return -1
           }
+          removeItem(candidate){
+                // удаляеет кандидата из списка если он найден.  еслинет, то возвращает -1
+                if(!(candidate instanceof Quadrant)){ return "Error" }
+                let index=this.checkToRemove(candidate);
+                if (index !==-1){
+                    this.items.splice(index,1);
+                    //после удаления надо удалить его и на картинке
+                    candidate.clear(canvas);
+                    drawgrid(canvas);
+                    return 1 ///  Success!
+                }
+                return -1
+          }
+
+
+          // proposeNewPlace(n,m){
+          //     var fullp  =  new Array()
+          //     console.log("Number of items i narray",this.items.length);
+              // for (var item of this.items){
+              //     fullp = fullp.concat(item.perimeter())
+              // }
+              // console.log(fullp)
+              // for (var p of fullp){
+              //     console.log(p)
+              //     drawpixel(p[0],p[1])
+              //     sleep(1000);////
+              //     clearpixel(p[0],p[1])
+                  // drawpixel(p[0],p[1]);
+                  // let candidat =[p[0]-n+1,p[1]-m+1]
+                  // let tq = new Quadrant(candidat[0],candidat[1],n,m)
+
+                  // let result = this.addQuadrant(tq,fix=0);
+                  // if (result === 1){
+                  //     tq.testdraw();
+                  // console.log("Quadrantresul",result,candidat);
+                  // drawpixel(candidat[0],candidat[1]);
+                  // sleep(1000);
+                  // clearpixel(candidat[0],candidat[1]);
+                  //     return  candidat
+                  //
+                  // }
+
+                  // }
+          // }
     }
     class Quadrant{
         constructor(x,y){
@@ -85,6 +112,8 @@
             this.m=this.randsize()[1];
         }
         setcoords(canvas,x,y){
+            if (x<0 || x>nlines-this.n){return -1}
+            if (y<0 || y>nlines-this.m){return -1}
 
             var ctx = canvas.getContext("2d");
             var s = getCellsize();
@@ -102,8 +131,8 @@
             return [n,m]
         }
         output(){
-            console.log(this.x,this.n)
-            console.log(this.y,this.m)
+            console.log(this.x,this.n);
+            console.log(this.y,this.m);
         }
         fix(canvas,listitems,listother=listmashineitems){
 
@@ -152,12 +181,15 @@
             //  проверка на соседство
             var sieb =0
             if (this.x===x+n && (this.y>=y && this.y< y+m)){sieb++}
+            if (this.x===x+n && (this.y<y && this.y+this.m > y)){sieb++}
             if (this.x===x+n && (this.y+this.m >y && this.y+this.m < y+m)){sieb++}
             if (this.x===x+n && (this.y+this.m < y && this.y+this.m > y+m)){sieb++}
 
             if (this.x+this.n===x && (this.y>=y && this.y< y+m)) {sieb++}
+            // if (this.x+this.n===x && (this.y>=y && this.y< y+m)) {sieb++}
             if (this.x+this.n===x && (this.y+this.m >y && this.y+this.m < y+m)) {sieb++}
             if (this.x+this.n===x && (this.y+this.m <y && this.y+this.m > y+m)) {sieb++}
+            if (this.x+this.n===x && (this.y < y && this.y+this.m >= y+m)) {sieb++}
 
             if (this.y === y+m && (this.x>=x && this.x < x+n)){sieb++}
             if (this.y === y+m && (this.x<x && this.x+this.n > x)){sieb++}
@@ -172,6 +204,7 @@
             }
             return 0;
         }
+
         clear(canvas){
             var ctx = canvas.getContext("2d");
             var s = getCellsize();
@@ -197,40 +230,47 @@
                   ctx.restore()
         }
         moveright(canvas){
-            var ctx = canvas.getContext("2d");
-            var s = getCellsize();
+            let ctx = canvas.getContext("2d");
+            let s = getCellsize();
+            ctx.save()
             ctx.clearRect(this.x*s[0],this.y*s[1],this.n*s[0],this.m*s[1]);
             ctx.fillStyle="rgba(255,0 , 0, 0.5)";
-            this.x=this.x+1;
+            let status = this.setcoords(canvas,this.x+1,this.y);
             drawgrid(canvas);
             ctx.fillRect(this.x*s[0],this.y*s[1],this.n*s[0],this.m*s[1]);
+            ctx.restore()
+            if (status === -1){return status}
         }
         moveleft(canvas){
             var ctx = canvas.getContext("2d");
             var s = getCellsize();
             ctx.clearRect(this.x*s[0],this.y*s[1],this.n*s[0],this.m*s[1]);
             ctx.fillStyle="rgba(255,0 , 0, 0.5)";
-            this.x=this.x-1;
+            let status = this.setcoords(canvas,this.x-1,this.y);
             drawgrid(canvas);
             ctx.fillRect(this.x*s[0],this.y*s[1],this.n*s[0],this.m*s[1]);
+            if (status === -1){return status};
         }
         moveup(canvas){
-            var ctx = canvas.getContext("2d");
-            var s = getCellsize();
+            let ctx = canvas.getContext("2d");
+            let s = getCellsize();
             ctx.clearRect(this.x*s[0],this.y*s[1],this.n*s[0],this.m*s[1]);
             ctx.fillStyle="rgba(255,0 , 0, 0.5)";
-            this.y=this.y-1;
+            // this.y=this.y-1;
+            let status = this.setcoords(canvas,this.x,this.y-1);
             drawgrid(canvas);
             ctx.fillRect(this.x*s[0],this.y*s[1],this.n*s[0],this.m*s[1]);
+            if (status === -1){return status}
         }
         movedown(canvas){
             let ctx = canvas.getContext("2d");
             let  s = getCellsize();
             ctx.clearRect(this.x*s[0],this.y*s[1],this.n*s[0],this.m*s[1]);
             ctx.fillStyle="rgba(255,0 , 0, 0.5)";
-            this.y=this.y+1;
+            let status = this.setcoords(canvas,this.x,this.y+1);
             drawgrid(canvas);
             ctx.fillRect(this.x*s[0],this.y*s[1],this.n*s[0],this.m*s[1]);
+            if (status === -1){return status}
         }
         perimeter(){
             var p =  new Array();
@@ -251,10 +291,12 @@
             let sumres = 0;
             for (var item of set.items){
                 // console.log("X",item.x,item.n,"Y",item.y,item.m)
-                let res = this.checkother(item.x,item.y,item.n,item.m)
+                let res = this.checkother(item.x,item.y,item.n,item.m);
                 // console.log("Res = ",res)
                 if (res === '-1'){
-                    return "Cross"
+                    let possibleremove = set.checkToRemove(this);
+                    if (possibleremove === -1){return "Cross"}
+                    return ["Cross",possibleremove]
                 }
                 sumres = sumres + res
             }

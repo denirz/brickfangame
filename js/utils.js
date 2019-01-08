@@ -11,6 +11,13 @@ function sleep(milliseconds) {
   return 1
 }
 
+function randid(nlines){
+    /// возвращает случайное число от 0 до nlines:
+    var n= parseInt(Math.random()*nlines);
+    return n
+};
+
+
 function getCellsize(){
 // Возвращает размеры ячеек в пикселях  [x,y]
     // требует определения nlines
@@ -21,6 +28,25 @@ function getCellsize(){
   return [q_w,q_h]
     }
 
+function drawgrid(canvas){
+       let ctx = canvas.getContext("2d");
+        var step = canvas.width/nlines;
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        for ( let  i=0;i<nlines;i++ ){
+            ctx.moveTo(step*i,0);
+            ctx.lineTo(step*i,canvas.height);
+        }
+
+        var step = canvas.height/nlines;
+        for ( let  i=0; i< nlines ;i++ ){
+            ctx.moveTo(0,step*i);
+            ctx.lineTo(canvas.width,step*i);
+        }
+        ctx.stroke();
+        listitems.drawQlist(canvas);
+        listmashineitems.drawQlist(canvas);
+    }
 
 function  drawpixel(x,y) {
         let canvas = document.getElementById("main");
