@@ -72,7 +72,31 @@
                 }
                 return -1
           }
-
+          score(){
+                /// calculates scores
+                let score=0;
+                this.items.forEach(function(item){
+                    score = score + item.n*item.m;
+                });
+                return score;
+          }
+          find_bySize(n,m){
+                // возвращает список индексов объектов  размера (n,m) + признак необходимости транспонировать
+              // или  -1  если ничего не найдено.
+                console.log(n,m);
+                let resarray= new  Array();
+              for (let index in this.items){
+                    let i=this.items[index];
+                    if (
+                        ((i.n===n) && (i.m === m)) ||
+                        ((i.n===m) && (i.m === n))
+                    )
+                  {
+                        resarray.push(index)
+                    }
+              }
+              return resarray
+          }
 
     }
     class Quadrant{
@@ -131,6 +155,9 @@
             this.clear(canvas)
             this.n=this.randsize()[0];
             this.m=this.randsize()[1];
+            if (this.x<0 || this.x>nlines-this.n){this.x=0}
+            if (this.y<0 || this.y>nlines-this.m){this.y=0}
+
             this.draw(canvas);
             drawgrid(canvas)
         }

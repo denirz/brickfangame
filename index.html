@@ -18,7 +18,7 @@
   <script src="js/utils.js"></script>
   <script>
     // Paramaters
-    let nlines = 30;
+    let nlines = 22;
   </script>
   <script src="js/Quadrant.js"></script>
   <script>
@@ -28,7 +28,7 @@
     listmashineitems.color = "rgba(0,255 ,0, 1)";
     let b = new Quadrant(nlines-8,nlines-8);
 
-    function mashinegame(canvas){
+    function mashinegame(canvas){ // todo  вообще это бы вынести в отдельный модуль и протестировать
         console.log("LENTH",listmashineitems.items.length)
         if (listmashineitems.items.length ===0){
           var allowed_u = listitems.addQuadrant(b,fix=0);
@@ -37,6 +37,23 @@
           b.reload(canvas);
             return 0;
         }
+        // вот тут попробуем сначала проверить кандидатов на удаление
+        let candidates_to_delete =  listitems.find_bySize(b.n,b.m);
+        for (let i of candidates_to_delete){
+            console.log("existing:"+b);
+            console.log("candidate:"+listitems.items[i]);
+            if (!((listitems.items[i].m === b.m) && (listitems.items[i].n === b.n))){
+                 b.rotate(canvas);
+            }
+            if (b.checkcorrectness(listmashineitems)>0){
+                b.fix(canvas,listmashineitems,listitems)
+                b.reload(canvas);
+                $("#nomoresteps").text("съел!")
+                return 1;
+
+            }
+        }
+
         for(i=0;i<nlines;i++){
             for(j=0;j<nlines;j++){
                 b.setcoords(canvas,j,i); //todo может быть добавить немнго ума в  такой перебор
@@ -47,12 +64,14 @@
                     console.log("Found",b);
                     listmashineitems.addQuadrant(b);
                     b.reload(canvas)
+                    $("#nomoresteps").text("нашел")
                     return 1;
                 }
             }
         }
 
         console.log("NO moves!");
+        $("#nomoresteps").text("NO more steps")
         b.reload(canvas)
     }
 
@@ -60,13 +79,16 @@
         let canvas = document.getElementById("main");
         drawgrid(canvas);
         window.addEventListener("keyup", function (event) {
+
             if(event.key === ' '){
                 a.rotate(canvas);
                 a.output();
             }
             if ( event.key ==="ArrowRight"){
-                // console.log(a);
-                a.moveright(canvas)
+                console.log(event);
+
+                a.moveright(canvas);
+                event.preventDefault();
             }
             if ( event.key =="ArrowLeft"){
                 // console.log(a);
@@ -83,7 +105,9 @@
             if ( event.key =="f"){
                 console.log(a);
                 let r = a.fix(canvas,listitems);
+                $("#myscore").text(listitems.score()+":"+listitems.items.length);
                 if(r ===1) { mashinegame(canvas);}
+                $("#mashinescore").text(listmashineitems.score()+":"+listmashineitems.items.length);
                 // console.log(listitems)
             }
             if ( event.key =="m"){
@@ -107,15 +131,22 @@
   <![endif]-->
 
   <h1>Hello world! This is brickfan game!</h1>
+  <h1>My Score</h1>
+  <p id="myscore"></p>
+  <h1>Computer Score</h1>
+  <p id="mashinescore"></p>
+  <p id="nomoresteps"></p>
+
   <canvas  id="main" width="800" height="800" > </canvas>
 
 
 
   <!-- Add your site or application content here -->
 
-  <script src="js/vendor/modernizr-{{MODERNIZR_VERSION}}.min.js"></script>
-  <script src="https://code.jquery.com/jquery-{{JQUERY_VERSION}}.min.js" integrity="{{JQUERY_SRI_HASH}}" crossorigin="anonymous"></script>
-  <script>window.jQuery || document.write('<script src="js/vendor/jquery-{{JQUERY_VERSION}}.min.js"><\/script>')</script>
+  <!--<script src="js/vendor/modernizr-{{MODERNIZR_VERSION}}.min.js"></script>-->
+  <!--<script src="https://code.jquery.com/jquery-{{JQUERY_VERSION}}.min.js" integrity="{{JQUERY_SRI_HASH}}" crossorigin="anonymous"></script>-->
+  <script src="js/vendor/jquery/jquery.js"></script>
+  <!--<script>window.jQuery || document.write('<script src="js/vendor/jquery-{{JQUERY_VERSION}}.min.js"><\/script>')</script>-->
   <script src="js/plugins.js"></script>
   <script src="js/main.js"></script>
 
