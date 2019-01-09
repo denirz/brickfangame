@@ -62,10 +62,16 @@
                 || (b.checkcorrectness(listitems) > 0)) )
                 {
                     console.log("Found",b);
-                    listmashineitems.addQuadrant(b);
-                    b.reload(canvas)
-                    $("#nomoresteps").text("нашел")
-                    return 1;
+                    listmashineitems.addQuadrant(b); // todo вот это надо бы заменить на fix но сходу оно не заработало
+                    let fixresult = 1
+                    // let fixresult = b.fix(listmashineitems,listitems)
+                    console.log("fixresult:"+fixresult);
+                    if (fixresult===1){
+                        b.reload(canvas);
+                        $("#nomoresteps").text("нашел");
+                        return 1;
+                    }
+
                 }
             }
         }
