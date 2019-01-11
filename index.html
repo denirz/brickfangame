@@ -21,71 +21,20 @@
     let nlines = 22;
   </script>
   <script src="js/Quadrant.js"></script>
+  <script src="js/mashinegame.js"></script>
   <script>
     let a  = new Quadrant(1,1);
     let listitems = new Qlist();
     let listmashineitems = new Qlist();
     listmashineitems.color = "rgba(0,255 ,0, 1)";
-    let b = new Quadrant(nlines-8,nlines-8);
+    let b = new Quadrant(randid(nlines-6),randid(nlines-6));
 
-    function mashinegame(canvas){ // todo  вообще это бы вынести в отдельный модуль и протестировать
-        console.log("LENTH",listmashineitems.items.length)
-        if (listmashineitems.items.length ===0){
-          var allowed_u = listitems.addQuadrant(b,fix=0);
-          var allowed_m = listmashineitems.addQuadrant(b);
-          listmashineitems.drawQlist(canvas);
-          b.reload(canvas);
-            return 0;
-        }
-        // вот тут попробуем сначала проверить кандидатов на удаление
-        let candidates_to_delete =  listitems.find_bySize(b.n,b.m);
-        for (let i of candidates_to_delete){
-            console.log("existing:"+b);
-            console.log("candidate:"+listitems.items[i]);
-            if (!((listitems.items[i].m === b.m) && (listitems.items[i].n === b.n))){
-                 b.rotate(canvas);
-            }
-            if (b.checkcorrectness(listmashineitems)>0){
-                b.fix(canvas,listmashineitems,listitems)
-                b.reload(canvas);
-                $("#nomoresteps").text("съел!")
-                return 1;
-
-            }
-        }
-
-        for(i=0;i<nlines;i++){
-            for(j=0;j<nlines;j++){
-                b.setcoords(canvas,j,i); //todo может быть добавить немнго ума в  такой перебор
-                // console.log("Quad1:",b,"correctness:",b.checkcorrectness(listmashineitems));
-                if((b.checkcorrectness(listmashineitems) > 0)&& ((b.checkcorrectness(listitems) ==0)
-                || (b.checkcorrectness(listitems) > 0)) )
-                {
-                    console.log("Found",b);
-                    listmashineitems.addQuadrant(b); // todo вот это надо бы заменить на fix но сходу оно не заработало
-                    let fixresult = 1
-                    // let fixresult = b.fix(listmashineitems,listitems)
-                    console.log("fixresult:"+fixresult);
-                    if (fixresult===1){
-                        b.reload(canvas);
-                        $("#nomoresteps").text("нашел");
-                        return 1;
-                    }
-
-                }
-            }
-        }
-
-        console.log("NO moves!");
-        $("#nomoresteps").text("NO more steps")
-        b.reload(canvas)
-    }
 
     function draw() {
         let canvas = document.getElementById("main");
         drawgrid(canvas);
-        window.addEventListener("keyup", function (event) {
-
+        window.addEventListener("keydown", function (event) {
+            event.preventDefault();
             if(event.key === ' '){
                 a.rotate(canvas);
                 a.output();
@@ -94,7 +43,7 @@
                 console.log(event);
 
                 a.moveright(canvas);
-                event.preventDefault();
+
             }
             if ( event.key =="ArrowLeft"){
                 // console.log(a);
@@ -112,14 +61,14 @@
                 console.log(a);
                 let r = a.fix(canvas,listitems);
                 $("#myscore").text(listitems.score()+":"+listitems.items.length);
-                if(r ===1) { mashinegame(canvas);}
+                if(r ===1) { mashinegame(canvas,listmashineitems,listitems);}
                 $("#mashinescore").text(listmashineitems.score()+":"+listmashineitems.items.length);
                 // console.log(listitems)
             }
             if ( event.key =="m"){
                 // console.log(a);
                 // listitems.drawQlist(canvas)
-                mashinegame(canvas)
+                mashinegame(canvas,listmashineitems,listitems)
             }
         }, false);
     }
