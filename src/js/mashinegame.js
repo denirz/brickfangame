@@ -1,53 +1,42 @@
  //  делает один ход за компьютер
 
   function mashinegame(canvas,listmashineitems,listitems,binit){ // todo  вообще это бы вынести в отдельный модуль и протестировать
+        console.log("binit=",binit);
+        // if(binit===undefined){var b = new Quadrant(randid(nlines-6),randid(nlines-6))};
+        // console.log("Typeof binit",typeof(binit));
+        // console.log("Typeof binit",type(binit));
+        // if(binit !== undefined){ let  b=new Quadrant(binit.n,binit.m);b.x=binit.x;b.y=binit.y}
 
-        if(binit===undefined){var b = new Quadrant(randid(nlines-6),randid(nlines-6))};
-        if(binit instanceof Quadrant){ var b=binit}
+        if(binit === undefined){
+            var b = new Quadrant(randid(nlines-6),randid(nlines-6));
+        }else{
+        var b=binit;
+        }
 
-        console.log("LENTH",listmashineitems.items.length,b)
+        console.log("b=",b);
+        console.log("LENTH",listmashineitems.items.length,b);
         if (listmashineitems.items.length ===0){
-            // resfix = b.fix(canvas, listmashineitems, listitems);
-            let iscorrect   = b.checkcorrectness(listitems)
-            console.log("resfix = ",iscorrect)
-            console.log("TYPE1",typeof(iscorrect))
+            let iscorrect   = b.checkcorrectness(listitems);
             if (typeof(iscorrect) === "number" ){
-                let res = b.fix(canvas,listmashineitems,listitems)
+                let res = b.fix(canvas,listmashineitems,listitems);
                 return res
             }
-            b.setcoords(canvas,b.x+3,b.y);
-            while(!(type(iscorrect) === 'number' )){
-                        b.y=b.y+1;
-                        iscorrect  = b.checkcorrectness(listitems);
-                        console.log("iscorrect",iscorrect)
-                        console.log("TYPE",typeof(iscorrect))
-                    }
-
-
-            // console.log("iscorrect2 = ",iscorrect)
-
-            if (typeof(iscorrect) === "number" ){
-                let res = b.fix(canvas,listmashineitems,listitems)
-                console.log("FIXED",res)
+            while (typeof(iscorrect) !== "number" ){
+                console.log("Iscorrect", iscorrect);
+                if(iscorrect[0]==='Cross' || iscorrect ==='Cross'){
+                    let result = b.move_one(canvas);
+                    if (result !== 1){return 0 }
+                    console.log("result move",result);
+                }
+                iscorrect   = b.checkcorrectness(listitems);
+                console.log("iscorrect 2 ",iscorrect)
+                }
+                let res = b.fix(canvas,listmashineitems,listitems);
                 return res
-            }
 
-            // b.setcoords(canvas,b.x+3,b.y);
-
-
-
-            // var allowed_u = listitems.addQuadrant(b,fix=0);
-
-            // var allowed_m = listmashineitems.addQuadrant(b);
-            //   var resfix = 0;
-            //   while (resfix===0) { //todo  ограничить количество итераций
-            //       b.reload(canvas)
-            // b.x = b.x+1;
-                // console.log("restfix",resfix)
-            // }
-          listmashineitems.drawQlist(canvas); // todo добавить проверку на корректность! ибо верхняя не особенно хороша
-          b.reload(canvas);
-            return 0;
+          // listmashineitems.drawQlist(canvas); // todo добавить проверку на корректность! ибо верхняя не особенно хороша
+          // b.reload(canvas);
+          //   return 0;
         }
 
 
@@ -68,23 +57,20 @@
                 }
             }
         }
+
         for(i=0;i<nlines;i++){
             for(j=0;j<nlines;j++){
-                b.setcoords(canvas,j,i); //todo может быть добавить немнго ума в  такой перебор
-                sleep(1000)
+                b.setcoords(canvas,j,i); //todo проверить  что коордианата установилась.
+                // sleep(1000)
                 // console.log("Quad1:",b,"correctness:",b.checkcorrectness(listmashineitems));
                 if((b.checkcorrectness(listmashineitems) > 0)&& ((b.checkcorrectness(listitems) ==0)
                 || (b.checkcorrectness(listitems) > 0)) )
                 {
                     console.log("Found",b);
-                    listmashineitems.addQuadrant(b); // todo вот это надо бы заменить на fix но сходу оно не заработало
-                    // let fixresult = 1
                     let fixresult = b.fix(canvas,listmashineitems,listitems)
                     console.log("fixresult:"+fixresult);
                     if (fixresult===1){
-                        b.reload(canvas);
                         $("#nomoresteps").text("нашел");
-                        // console.log("нашел")
                         return 1;
                     }
 

@@ -120,6 +120,19 @@
             ctx.fillRect(this.x*s[0],this.y*s[1],this.n*s[0],this.m*s[1]);
 
         }
+
+        move_one(canvas){
+            //  todo приделать  тесты - их тут нет  пока что
+            if(this.setcoords(canvas,this.x+1,this.y) === -1){
+                if(this.setcoords(canvas,0,this.y+1) === -1){
+                    if(this.setcoords(canvas,0,0) === -1){
+                        return 1
+                    }
+                }
+            }
+            return 1
+        }
+
         randsize(){
             var n= parseInt(Math.random()*6)+1;
             var m= parseInt(Math.random()*6)+1;
