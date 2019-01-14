@@ -24,14 +24,18 @@ describe("Mashinegame function test ",function(){
     });
 
     it("Second Step",function(){
-    let a = new Quadrant(0,0);
+    let a = new Quadrant(10,10);
         a.m = 2;
         a.n = 2;
+
+
         a.setcoords(canvas,nlines-4,1);
         listitems.addQuadrant(a);
         a.setcoords(canvas,a.x+2,1);
-        listitems.addQuadrant(a);
+        // listitems.addQuadrant(a);
+        a.fix(canvas,listitems,listmashineitems);
         a.setcoords(canvas,a.x+2,1);
+        console.log(a.fix(canvas,listitems,listmashineitems))
         var  result = mashinegame(canvas,listmashineitems,listitems);
         expect(result).toEqual(1);
         a.m = 3;
@@ -40,6 +44,32 @@ describe("Mashinegame function test ",function(){
         expect(result).toEqual(1);
         var  result = mashinegame(canvas,listmashineitems,listitems,a);
         expect(result).toEqual(1);
+        var  result = mashinegame(canvas,listmashineitems,listitems);
+        expect(result).toEqual(1);
+        drawgrid(canvas)
+
+
+    });
+    it("Game with self",function () {
+
+        expect(mashinegame(canvas,listitems,listmashineitems)).toEqual(1);
+        expect(mashinegame(canvas,listmashineitems,listitems)).toEqual(1);
+        expect(mashinegame(canvas,listitems,listmashineitems)).toEqual(1);
+        expect(mashinegame(canvas,listmashineitems,listitems)).toEqual(1);
+        expect(mashinegame(canvas,listitems,listmashineitems)).toEqual(1);
+        expect(mashinegame(canvas,listmashineitems,listitems)).toEqual(1);
+        expect(mashinegame(canvas,listitems,listmashineitems)).toEqual(1);
+        expect(mashinegame(canvas,listmashineitems,listitems)).toEqual(1);
+        expect(mashinegame(canvas,listitems,listmashineitems)).toEqual(1);
+        expect(mashinegame(canvas,listmashineitems,listitems)).toEqual(1);
+
+        console.log(listmashineitems);
+
+    })
+
+    it("setup some items",function () {
+
+
 
 
     })
