@@ -10,6 +10,7 @@ describe("Mashinegame function test ",function(){
         canvas = document.getElementById("main");
      drawgrid(canvas)
      });
+
     it("FirstStep",function(){
         let a = new Quadrant(0,0);
         a.m = 2;
@@ -68,10 +69,71 @@ describe("Mashinegame function test ",function(){
     })
 
     it("setup some items",function () {
+        mashinegame(canvas,listitems,listmashineitems);
+        mashinegame(canvas,listmashineitems,listitems);
+        mashinegame(canvas,listitems,listmashineitems);
+        mashinegame(canvas,listmashineitems,listitems);
+        mashinegame(canvas,listitems,listmashineitems);
+        mashinegame(canvas,listmashineitems,listitems);
+        mashinegame(canvas,listitems,listmashineitems);
+        mashinegame(canvas,listmashineitems,listitems);
+
+        for ( item of listmashineitems.items){
+            console.log(item)
+            $('#nomoresteps').html($('#nomoresteps').html() + item.x+ ':'+item.y+':')
+            $('#nomoresteps').text($('#nomoresteps').text() + item.n+ ':'+item.m+'\n')
+            $('#nomoresteps').text($('#nomoresteps').text() + '|')
+        }
+            $('#nomoresteps').text($('#nomoresteps').text() + '|||')
+
+        for ( item of listitems.items){
+            console.log(item)
+            $('#nomoresteps').html($('#nomoresteps').html() + item.x+ ':'+item.y+':')
+            $('#nomoresteps').text($('#nomoresteps').text() + item.n+ ':'+item.m+'\n')
+            $('#nomoresteps').text($('#nomoresteps').text() + '|')
+        }
 
 
+    });
+
+    //11:5:1:5 |6:3:2:6 |6:1:2:2 |6:0:1:3 ||||4:6:6:3 |0:2:4:5 |5:0:4:1 |7:6:3:6 |
+    //4:3:6:5 |2:0:2:5 |1:0:1:5 |0:0:1:3 ||||11:12:2:2 |11:7:1:5 |10:2:4:5 |14:0:4:6 |
+    it("Setup position",function () {
+        a=new Quadrant(4,3,6,5)
+        listitems.addQuadrant(a);
+        delete  a
+        a=new Quadrant(2,0,2,5)
+        listitems.addQuadrant(a);
+        delete  a
+        a=new Quadrant(1,0,1,5)
+        listitems.addQuadrant(a);
+        delete  a
+        a=new Quadrant(0,0,1,3)
+        listitems.addQuadrant(a);
+        delete  a
+
+
+        a=new Quadrant(11,12,2,2);
+        listmashineitems.addQuadrant(a);
+        delete  a
+        a=new Quadrant(11,7,1,5);
+        listmashineitems.addQuadrant(a);
+        delete  a
+        a=new Quadrant(10,2,4,5);
+        listmashineitems.addQuadrant(a);
+        delete  a;
+        a=new Quadrant(14,0,4,6);
+        listmashineitems.addQuadrant(a);
+        delete  a;
+
+        let binit = new Quadrant(0,0,6,5)
+        let res = mashinegame(canvas,listmashineitems,listitems,binit);
+
+        // $('#nomoresteps').text(res)
+
+
+        drawgrid(canvas)
 
 
     })
-
 });

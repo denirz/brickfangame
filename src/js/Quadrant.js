@@ -100,11 +100,13 @@
 
     }
     class Quadrant{
-        constructor(x,y){
+        constructor(x,y,n,m){
             this.x=x;
             this.y=y;
-            this.n=this.randsize()[0];
-            this.m=this.randsize()[1];
+
+            if (n === undefined){this.n=this.randsize()[0]}else {this.n=n};
+            if (m === undefined){this.m=this.randsize()[1]}else {this.m=m};
+            // this.m=this.randsize()[1];
         }
         setcoords(canvas,x,y){
             if (x<0 || x>nlines-this.n){return -1}

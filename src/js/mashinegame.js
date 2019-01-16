@@ -44,16 +44,20 @@
         if (listmashineitems.items.length !==0) {
             let candidates_to_delete = listitems.find_bySize(b.n, b.m);
             for (let i of candidates_to_delete) {
-                console.log("existing:" + b);
-                console.log("candidate:" + listitems.items[i]);
-                if (!((listitems.items[i].m === b.m) && (listitems.items[i].n === b.n))) {
-                    b.rotate(canvas);
-                }
-                if (b.checkcorrectness(listmashineitems) > 0) {
-                    b.fix(canvas, listmashineitems, listitems)
-                    b.reload(canvas);
-                    $("#nomoresteps").text("съел!")
-                    return 1;
+                console.log("existing:", b);
+                console.log(b);
+                console.log("candidate:" , listitems.items[i]);
+
+                if (((listitems.items[i].m === b.m) && (listitems.items[i].n === b.n))) {
+                    // b.rotate(canvas);
+                    console.log("HEre")
+                    console.log(b)
+                    console.log(b.checkcorrectness(listmashineitems));
+                        if (b.checkcorrectness(listmashineitems) >= 0) {
+                        console.log(b.fix(canvas, listmashineitems, listitems))
+                        // b.reload(canvas);
+                        $("#nomoresteps").text("съел!")
+                        return 1;}
                 }
             }
         }
